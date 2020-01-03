@@ -26,6 +26,7 @@ package com.owncloud.android.lib.common.network;
 
 import android.content.Context;
 
+import com.owncloud.android.lib.common.ClientCertificateActivity;
 import com.owncloud.android.lib.common.utils.Log_OC;
 
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
@@ -47,6 +48,7 @@ import java.security.cert.CertificateException;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.KeyManager;
 
 public class NetworkUtils {
     
@@ -107,6 +109,12 @@ public class NetworkUtils {
             KeyStore trustStore = getKnownServersStore(context);
             AdvancedX509TrustManager trustMgr = new AdvancedX509TrustManager(trustStore);
             TrustManager[] tms = new TrustManager[] { trustMgr };
+
+
+            KeyManager keyManager =
+                    AdvancedX509KeyManager.fromAlias(context, ClientCertificateActivity.alias);
+            KeyManager[] keyManagers = (keyManager == null ? null :
+                    new KeyManager[]{keyManager});
                 
             SSLContext sslContext;
             try {
@@ -117,8 +125,17 @@ public class NetworkUtils {
             	// should be available in any device; see reference of supported protocols in 
             	// http://developer.android.com/reference/javax/net/ssl/SSLSocket.html
             }
-            sslContext.init(null, tms, null);
-                    
+            sslContext.init(keyManagers, tms, null);
+
+            /* CURRENT THOUGHTS
+            We don't know the hostname until a request needs to be made. Therefore we need to
+            generate a context for now (base context, then update it with a new key manager when we
+            have asked for permission for access to the client cert. This will need an x509 key
+            manager (to sit allongside AdvancedX509TrustManager) and making a call for permission to
+            the cert when an SSL connection requires one. This can probably be done in the SSL
+            socket factory. Need to be miondful of how the alias call back interracts with this!
+             */
+
             mHostnameVerifier = new BrowserCompatHostnameVerifier();
             mAdvancedSslSocketFactory = new AdvancedSslSocketFactory(sslContext, trustMgr, mHostnameVerifier);
         }
