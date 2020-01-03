@@ -33,6 +33,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.security.KeyChain;
 
 import com.nextcloud.common.NextcloudClient;
 import com.owncloud.android.lib.common.accounts.AccountTypeUtils;
@@ -106,6 +107,11 @@ public class OwnCloudClientFactory {
         AccountManager am = AccountManager.get(appContext);
         // TODO avoid calling to getUserData here
         String userId = am.getUserData(account, AccountUtils.Constants.KEY_USER_ID);
+
+        ClientCertificateActivity clientCertificateActivity = new ClientCertificateActivity();
+
+        KeyChain.choosePrivateKeyAlias(clientCertificateActivity, clientCertificateActivity,
+                new String[]{"RSA"}, null, baseUri.getHost(), baseUri.getPort(), null);
 
         OwnCloudClient client = createOwnCloudClient(baseUri, appContext, true);
         client.setUserId(userId);

@@ -95,6 +95,8 @@ spotbugs {
 android {
     compileSdkVersion 29
 
+    useLibrary 'org.apache.http.legacy'
+
     sourceSets {
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
