@@ -265,6 +265,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
 
             } catch (RuntimeException e) {
 
+                Log_OC.d(TAG, "Runtime exception in SSl hanshake: " + e.toString());
                 if (e instanceof CertificateCombinedException) {
                     failInHandshake = (CertificateCombinedException) e;
                 } else {
