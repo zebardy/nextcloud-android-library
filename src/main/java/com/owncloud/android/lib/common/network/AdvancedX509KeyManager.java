@@ -4,6 +4,8 @@ import android.content.Context;
 import android.security.KeyChain;
 import android.security.KeyChainException;
 
+import com.owncloud.android.lib.common.utils.Log_OC;
+
 import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -22,6 +24,7 @@ public class AdvancedX509KeyManager implements X509KeyManager {
     private final String alias;
     private final X509Certificate[] certChain;
     private final PrivateKey privateKey;
+    private static final String TAG = AdvancedX509KeyManager.class.getSimpleName();
 
     public static SSLContext setForConnection(HttpsURLConnection con, Context context, String alias) throws CertificateException, KeyManagementException {
         SSLContext sslContext = null;
@@ -37,6 +40,7 @@ public class AdvancedX509KeyManager implements X509KeyManager {
     }
 
     public static AdvancedX509KeyManager fromAlias(Context context, String alias) throws CertificateException {
+        Log_OC.d(TAG, "AARON: fromAlias " + alias);
         X509Certificate[] certChain;
         PrivateKey privateKey;
         try {
