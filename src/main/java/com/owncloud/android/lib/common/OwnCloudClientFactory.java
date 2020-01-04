@@ -108,8 +108,8 @@ public class OwnCloudClientFactory {
         // TODO avoid calling to getUserData here
         String userId = am.getUserData(account, AccountUtils.Constants.KEY_USER_ID);
 
+        Log_OC.d(TAG, "AARON: Attempt to get client cert for host: " + baseUri.getHost());
         ClientCertificateActivity clientCertificateActivity = new ClientCertificateActivity();
-
         KeyChain.choosePrivateKeyAlias(clientCertificateActivity, clientCertificateActivity,
                 new String[]{"RSA"}, null, baseUri.getHost(), baseUri.getPort(), null);
 
