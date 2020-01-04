@@ -149,11 +149,11 @@ public class OwnCloudClientFactory {
     public static OwnCloudClient createOwnCloudClient(Uri uri, Context context, boolean followRedirects) {
         Log_OC.d(TAG, "AARON: createOwnCloudClient2");
 
-        Log_OC.d(TAG, "AARON: Attempt to get client cert for host: " + baseUri.getHost());
+        Log_OC.d(TAG, "AARON: Attempt to get client cert for host: " + uri.getHost());
         ClientCertificateActivity clientCertificateActivity = new ClientCertificateActivity();
         KeyChain.choosePrivateKeyAlias(clientCertificateActivity, clientCertificateActivity,
-                new String[]{"RSA"}, null, baseUri.getHost(), baseUri.getPort(), null);
-        
+                new String[]{"RSA"}, null, uri.getHost(), uri.getPort(), null);
+
         try {
             NetworkUtils.registerAdvancedSslContext(true, context);
         }  catch (GeneralSecurityException e) {
