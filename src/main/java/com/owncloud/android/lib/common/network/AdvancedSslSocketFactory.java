@@ -163,7 +163,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
                                final InetAddress localAddress, final int localPort,
                                final HttpConnectionParams params) throws IOException,
             UnknownHostException, ConnectTimeoutException {
-        Log_OC.d(TAG, "Creating SSL Socket with remote " + host + ":" + port + ", local " + localAddress + ":" +
+        Log_OC.d(TAG, "AARON: Creating SSL Socket with remote " + host + ":" + port + ", local " + localAddress + ":" +
                 localPort + ", params: " + params);
         if (params == null) {
             throw new IllegalArgumentException("Parameters may not be null");
@@ -173,7 +173,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
         //logSslInfo();
 
         SocketFactory socketfactory = mSslContext.getSocketFactory();
-        Log_OC.d(TAG, " ... with connection timeout " + timeout + " and socket timeout " + params.getSoTimeout());
+        Log_OC.d(TAG, " AARON: ... with connection timeout " + timeout + " and socket timeout " + params.getSoTimeout());
         Socket socket = socketfactory.createSocket();
         enableSecureProtocols(socket);
         SocketAddress localaddr = new InetSocketAddress(localAddress, localPort);
@@ -208,7 +208,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
      */
     @Override
     public Socket createSocket(String host, int port) throws IOException {
-        Log_OC.d(TAG, "Creating SSL Socket with remote " + host + ":" + port);
+        Log_OC.d(TAG, "AARON: Creating SSL Socket with remote " + host + ":" + port);
         Socket socket = mSslContext.getSocketFactory().createSocket(getInetAddressForHost(host), port);
         enableSecureProtocols(socket);
         verifyPeerIdentity(host, port, socket);
