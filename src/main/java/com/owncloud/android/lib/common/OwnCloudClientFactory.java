@@ -79,6 +79,7 @@ public class OwnCloudClientFactory {
             throws OperationCanceledException, AuthenticatorException, IOException,
             AccountNotFoundException {
         //Log_OC.d(TAG, "Creating OwnCloudClient associated to " + account.name);
+        Log_OC.d(TAG, "AARON: createOwnCloudClient1");
         Uri baseUri = Uri.parse(AccountUtils.getBaseUrlForAccount(appContext, account));
         AccountManager am = AccountManager.get(appContext);
         // TODO avoid calling to getUserData here
@@ -146,6 +147,7 @@ public class OwnCloudClientFactory {
      * @return          A OwnCloudClient object ready to be used
      */
     public static OwnCloudClient createOwnCloudClient(Uri uri, Context context, boolean followRedirects) {
+        Log_OC.d(TAG, "AARON: createOwnCloudClient2");
         try {
             NetworkUtils.registerAdvancedSslContext(true, context);
         }  catch (GeneralSecurityException e) {
@@ -173,6 +175,8 @@ public class OwnCloudClientFactory {
      * @return A OwnCloudClient object ready to be used
      */
     public static NextcloudClient createNextcloudClient(Uri uri, Context context, boolean followRedirects) {
+
+        Log_OC.d(TAG, "AARON: createNextCloudClient1");
         try {
             NetworkUtils.registerAdvancedSslContext(true, context);
         } catch (GeneralSecurityException e) {
@@ -210,6 +214,8 @@ public class OwnCloudClientFactory {
             throws OperationCanceledException, AuthenticatorException, IOException,
             AccountNotFoundException {
         //Log_OC.d(TAG, "Creating OwnCloudClient associated to " + account.name);
+
+        Log_OC.d(TAG, "AARON: createNextCloudClient2");
         Uri baseUri = Uri.parse(AccountUtils.getBaseUrlForAccount(appContext, account));
         AccountManager am = AccountManager.get(appContext);
         // TODO avoid calling to getUserData here
