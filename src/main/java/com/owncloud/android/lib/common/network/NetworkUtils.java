@@ -110,12 +110,15 @@ public class NetworkUtils {
             AdvancedX509TrustManager trustMgr = new AdvancedX509TrustManager(trustStore);
             TrustManager[] tms = new TrustManager[] { trustMgr };
 
-
-            KeyManager keyManager =
-                    AdvancedX509KeyManager.fromAlias(context, ClientCertificateActivity.alias);
+            KeyManager keyManager = null;
+            if (ClientCertificateActivity.alias != null) {
+                keyManager =
+                        AdvancedX509KeyManager.fromAlias(context, ClientCertificateActivity.alias);
+            }
             KeyManager[] keyManagers = (keyManager == null ? null :
                     new KeyManager[]{keyManager});
                 
+            SSLContext sslContext;
             SSLContext sslContext;
             try {
             	sslContext = SSLContext.getInstance("TLSv1.2");
