@@ -119,7 +119,6 @@ public class NetworkUtils {
                     new KeyManager[]{keyManager});
                 
             SSLContext sslContext;
-            SSLContext sslContext;
             try {
             	sslContext = SSLContext.getInstance("TLSv1.2");
             } catch (NoSuchAlgorithmException e) {
