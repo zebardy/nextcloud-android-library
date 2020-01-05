@@ -11,7 +11,8 @@ public class ClientCertificateActivity extends Activity implements KeyChainAlias
 
     public static String alias;
     public static final String RESULT_ALIAS = "ClientCertificateActivity.alias";
-    private static final String TAG = ClientCertificateActivity.class.getSimpleName();
+    //private static final String TAG = ClientCertificateActivity.class.getSimpleName();
+    private static final String TAG = "ClientCertificateActivity: ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
