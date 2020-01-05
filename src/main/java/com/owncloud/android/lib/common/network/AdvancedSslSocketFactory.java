@@ -183,8 +183,12 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
         socket.setSoTimeout(params.getSoTimeout() * 5);
         socket.bind(localaddr);
         ServerNameIndicator.setServerNameIndication(host, (SSLSocket) socket);
+
+        Log_OC.d(TAG, " AARON: call socket connect");
         socket.connect(remoteaddr, timeout);
         verifyPeerIdentity(host, port, socket);
+
+        Log_OC.d(TAG, " AARON: return socket");
         return socket;
     }
 
@@ -255,6 +259,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
      * @param socket
      */
     private void verifyPeerIdentity(String host, int port, Socket socket) throws IOException {
+        Log_OC.d(TAG, " AARON: verifying peer");
         try {
             CertificateCombinedException failInHandshake = null;
             /// 1. VERIFY THE SERVER CERTIFICATE through the registered TrustManager 

@@ -210,7 +210,7 @@ public class OwnCloudClient extends HttpClient {
 
             params.setParameter(HttpMethodParams.USER_AGENT, OwnCloudClientManagerFactory.getUserAgent());
 
-            Log_OC.d(TAG + " #" + mInstanceNumber, "REQUEST " + method.getName() + " " + method.getPath());
+            Log_OC.d(TAG + " - executeMethod #" + mInstanceNumber, "REQUEST " + method.getName() + " " + method.getPath());
 
 //	        logCookiesAtRequest(method.getRequestHeaders(), "before");
 //	        logCookiesAtState("before");
@@ -229,7 +229,8 @@ public class OwnCloudClient extends HttpClient {
             return status;
 
         } catch (IOException e) {
-            //Log_OC.d(TAG + " #" + mInstanceNumber, "Exception occurred", e);
+            Log_OC.d(TAG + " #" + mInstanceNumber, "Exception occurred", e);
+            e.printStackTrace();
             throw e;
         }
     }
