@@ -165,6 +165,8 @@ public class OwnCloudClientFactory {
                     " in the system will be used for HTTPS connections", e);
         }
 
+
+        Log_OC.d(TAG, "AARON: create OwnCloudClient");
         OwnCloudClient client = new OwnCloudClient(uri, NetworkUtils.getMultiThreadedConnManager());
         client.setDefaultTimeouts(DEFAULT_DATA_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
         client.setFollowRedirects(followRedirects);
