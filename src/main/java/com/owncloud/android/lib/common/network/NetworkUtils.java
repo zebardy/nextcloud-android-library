@@ -110,6 +110,7 @@ public class NetworkUtils {
             AdvancedX509TrustManager trustMgr = new AdvancedX509TrustManager(trustStore);
             TrustManager[] tms = new TrustManager[] { trustMgr };
 
+            Log_OC.d(TAG, "AARON: build KeyManager");
             KeyManager keyManager = null;
             if (ClientCertificateActivity.alias != null) {
                 keyManager =
@@ -127,6 +128,7 @@ public class NetworkUtils {
             	// should be available in any device; see reference of supported protocols in 
             	// http://developer.android.com/reference/javax/net/ssl/SSLSocket.html
             }
+            Log_OC.d(TAG, "AARON: init SSL context");
             sslContext.init(keyManagers, tms, null);
 
             /* CURRENT THOUGHTS
