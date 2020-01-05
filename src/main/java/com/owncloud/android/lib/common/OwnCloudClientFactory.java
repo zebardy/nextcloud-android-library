@@ -42,6 +42,9 @@ import com.owncloud.android.lib.common.accounts.AccountUtils.AccountNotFoundExce
 import com.owncloud.android.lib.common.network.NetworkUtils;
 import com.owncloud.android.lib.common.utils.Log_OC;
 
+//import org.apache.http.util.ExceptionUtils;
+//import org.apache.commons.lang.exception.ExceptionUtils;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
@@ -156,7 +159,8 @@ public class OwnCloudClientFactory {
                     new String[]{"RSA"}, null, uri.getHost(), uri.getPort(), null);
         } catch (Exception e) {
             Log_OC.d(TAG, "AARON: exception from KeyChain.choosePrivateKeyAlias - " + e.toString());
-            Log_OC.d(TAG, "AARON: stack trace from KeyChain.choosePrivateKeyAlias - " + e.getStackTrace().toString());
+            e.printStackTrace();
+            //Log_OC.d(TAG, "AARON: stack trace from KeyChain.choosePrivateKeyAlias - " + ExceptionUtils.getStackTrace(e));
         }
 
         Log_OC.d(TAG, "AARON: dialog should have popped up");
