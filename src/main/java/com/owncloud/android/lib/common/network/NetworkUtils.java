@@ -193,7 +193,10 @@ public class NetworkUtils {
     
     public static void addCertToKnownServersStore(Certificate cert, Context context) 
     		throws  KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
-    	
+
+
+        Log_OC.d(TAG, "AARON: adding server cert to trust store");
+        new Throwable().printStackTrace();v
         KeyStore knownServers = getKnownServersStore(context);
         knownServers.setCertificateEntry(Integer.toString(cert.hashCode()), cert);
         FileOutputStream fos = null;
