@@ -196,7 +196,7 @@ public class NetworkUtils {
 
 
         Log_OC.d(TAG, "AARON: adding server cert to trust store");
-        new Throwable().printStackTrace();v
+        new Throwable().printStackTrace();
         KeyStore knownServers = getKnownServersStore(context);
         knownServers.setCertificateEntry(Integer.toString(cert.hashCode()), cert);
         FileOutputStream fos = null;
