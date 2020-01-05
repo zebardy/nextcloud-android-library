@@ -150,9 +150,15 @@ public class OwnCloudClientFactory {
         Log_OC.d(TAG, "AARON: createOwnCloudClient2");
 
         Log_OC.d(TAG, "AARON: Attempt to get client cert for host: " + uri.getHost());
-        ClientCertificateActivity clientCertificateActivity = new ClientCertificateActivity();
-        KeyChain.choosePrivateKeyAlias(clientCertificateActivity, clientCertificateActivity,
-                new String[]{"RSA"}, null, uri.getHost(), uri.getPort(), null);
+        try {
+            ClientCertificateActivity clientCertificateActivity = new ClientCertificateActivity();
+            KeyChain.choosePrivateKeyAlias(clientCertificateActivity, clientCertificateActivity,
+                    new String[]{"RSA"}, null, uri.getHost(), uri.getPort(), null);
+        } catch (Exception e) {
+            Log_OC.d(TAG, "AARON: exception from KeyChain.choosePrivateKeyAlias - " + e.toString());
+        }
+
+        Log_OC.d(TAG, "AARON: dialog should have popped up");
 
         try {
             NetworkUtils.registerAdvancedSslContext(true, context);
