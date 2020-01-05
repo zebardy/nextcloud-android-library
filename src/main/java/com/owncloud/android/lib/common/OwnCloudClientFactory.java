@@ -156,6 +156,7 @@ public class OwnCloudClientFactory {
                     new String[]{"RSA"}, null, uri.getHost(), uri.getPort(), null);
         } catch (Exception e) {
             Log_OC.d(TAG, "AARON: exception from KeyChain.choosePrivateKeyAlias - " + e.toString());
+            Log_OC.d(TAG, "AARON: stack trace from KeyChain.choosePrivateKeyAlias - " + e.getStackTrace().toString());
         }
 
         Log_OC.d(TAG, "AARON: dialog should have popped up");
