@@ -204,7 +204,8 @@ public class RemoteOperationResult implements Serializable {
                 break;
             default:
                 mCode = ResultCode.UNHANDLED_HTTP_CODE;
-                Log_OC.d(TAG, "RemoteOperationResult has processed UNHANDLED_HTTP_CODE: " + httpCode);
+                Log_OC.d(TAG, "1 RemoteOperationResult has processed UNHANDLED_HTTP_CODE: " + httpCode);
+                new Throwable().printStackTrace();
             }
         }
     }
@@ -250,7 +251,7 @@ public class RemoteOperationResult implements Serializable {
                     break;
                 default:
                     mCode = ResultCode.UNHANDLED_HTTP_CODE;
-                    Log_OC.d(TAG, "RemoteOperationResult has processed UNHANDLED_HTTP_CODE: " + httpCode + " - " + bodyResponse);
+                    Log_OC.d(TAG, "2 RemoteOperationResult has processed UNHANDLED_HTTP_CODE: " + httpCode + " - " + bodyResponse);
                     new Throwable().printStackTrace();
 
             }
@@ -469,8 +470,9 @@ public class RemoteOperationResult implements Serializable {
                 default:
                     mCode = ResultCode.UNHANDLED_HTTP_CODE;         // UNKNOWN ERROR
                     Log_OC.d(TAG,
-                            "RemoteOperationResult has processed UNHANDLED_HTTP_CODE: "
+                            "3 RemoteOperationResult has processed UNHANDLED_HTTP_CODE: "
                                     + mHttpCode + " " + mHttpPhrase);
+                    new Throwable().printStackTrace();
             }
         }
     }
