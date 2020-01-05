@@ -182,6 +182,7 @@ public class OwnCloudClientFactory {
         client.setDefaultTimeouts(DEFAULT_DATA_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
         client.setFollowRedirects(followRedirects);
 
+        Log_OC.d(TAG, "AARON: return OwnCloudClient");
         return client;
     }
 
