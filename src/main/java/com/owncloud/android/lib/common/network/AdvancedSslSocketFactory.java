@@ -267,7 +267,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
             try {
                 SSLSocket sock = (SSLSocket) socket;    // a new SSLSession instance is created as a "side effect" 
                 sock.startHandshake();
-
+                Log_OC.d(TAG, "Hanshake started");
             } catch (RuntimeException e) {
 
                 Log_OC.d(TAG, "Runtime exception in SSl hanshake: " + e.toString());
@@ -294,20 +294,24 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
             }
 
             /// 2. VERIFY HOSTNAME
+            Log_OC.d(TAG, "Verify hostname");
             SSLSession newSession = null;
             boolean verifiedHostname = true;
             if (mHostnameVerifier != null) {
                 if (failInHandshake != null) {
+                    Log_OC.d(TAG, "Fail in handshake");
                     /// 2.1 : a new SSLSession instance was NOT created in the handshake
                     X509Certificate serverCert = failInHandshake.getServerCertificate();
                     try {
                         mHostnameVerifier.verify(host, serverCert);
                     } catch (SSLException e) {
+                        Log_OC.d(TAG, "SSLException");
                         verifiedHostname = false;
                     }
 
                 } else {
                     /// 2.2 : a new SSLSession instance was created in the handshake
+                    Log_OC.d(TAG, "SSLSession instance created");
                     newSession = ((SSLSocket) socket).getSession();
                     if (!mTrustManager.isKnownServer((X509Certificate) (newSession.getPeerCertificates()[0]))) {
                         verifiedHostname = mHostnameVerifier.verify(host, newSession);
@@ -317,6 +321,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
 
             /// 3. Combine the exceptions to throw, if any
             if (!verifiedHostname) {
+                Log_OC.d(TAG, "SSLPeerUnverifiedException");
                 SSLPeerUnverifiedException pue = new SSLPeerUnverifiedException(
                         "Names in the server certificate do not match to " + host + " in the URL"
                 );
@@ -331,13 +336,16 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
                 throw pue;
 
             } else if (failInHandshake != null) {
+                Log_OC.d(TAG, "Server certificate could not be verified");
                 SSLHandshakeException hse = new SSLHandshakeException("Server certificate could not be verified");
                 hse.initCause(failInHandshake);
                 throw hse;
             }
 
         } catch (IOException io) {
+            Log_OC.d(TAG, "IOException");
             try {
+                Log_OC.d(TAG, "closing socket");
                 socket.close();
             } catch (Exception x) {
                 // NOTHING - irrelevant exception for the caller 
