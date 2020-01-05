@@ -316,6 +316,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
                     if (!mTrustManager.isKnownServer((X509Certificate) (newSession.getPeerCertificates()[0]))) {
                         verifiedHostname = mHostnameVerifier.verify(host, newSession);
                     }
+                    Log_OC.d(TAG, "got session");
                 }
             }
 
@@ -352,6 +353,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
             }
             throw io;
         }
+        Log_OC.d(TAG, "verified peer identity");
     }
 
     /**
