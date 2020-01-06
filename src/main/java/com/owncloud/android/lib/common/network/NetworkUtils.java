@@ -26,7 +26,6 @@ package com.owncloud.android.lib.common.network;
 
 import android.content.Context;
 
-import com.owncloud.android.lib.common.ClientCertificateActivity;
 import com.owncloud.android.lib.common.utils.Log_OC;
 
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
@@ -40,15 +39,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.KeyManager;
 
 public class NetworkUtils {
     
@@ -103,33 +100,11 @@ public class NetworkUtils {
         }
     }
     
-    public static AdvancedSslSocketFactory getAdvancedSslSocketFactory(Context context) 
+    public static AdvancedSslSocketFactory getAdvancedSslSocketFactory(Context context)
     		throws GeneralSecurityException, IOException {
         if (mAdvancedSslSocketFactory  == null) {
             KeyStore trustStore = getKnownServersStore(context);
             AdvancedX509TrustManager trustMgr = new AdvancedX509TrustManager(trustStore);
-            TrustManager[] tms = new TrustManager[] { trustMgr };
-
-            Log_OC.d(TAG, "AARON: build KeyManager");
-            KeyManager keyManager = null;
-            if (ClientCertificateActivity.alias != null) {
-                keyManager =
-                        AdvancedX509KeyManager.fromAlias(context, ClientCertificateActivity.alias);
-            }
-            KeyManager[] keyManagers = (keyManager == null ? null :
-                    new KeyManager[]{keyManager});
-                
-            SSLContext sslContext;
-            try {
-            	sslContext = SSLContext.getInstance("TLSv1.2");
-            } catch (NoSuchAlgorithmException e) {
-            	Log_OC.w(TAG, "TLSv1.2 is not supported in this device; falling through TLSv1.0");
-            	sslContext = SSLContext.getInstance("TLSv1");
-            	// should be available in any device; see reference of supported protocols in 
-            	// http://developer.android.com/reference/javax/net/ssl/SSLSocket.html
-            }
-            Log_OC.d(TAG, "AARON: init SSL context");
-            sslContext.init(keyManagers, tms, null);
 
             /* CURRENT THOUGHTS
             We don't know the hostname until a request needs to be made. Therefore we need to
@@ -141,7 +116,7 @@ public class NetworkUtils {
              */
 
             mHostnameVerifier = new BrowserCompatHostnameVerifier();
-            mAdvancedSslSocketFactory = new AdvancedSslSocketFactory(sslContext, trustMgr, mHostnameVerifier);
+            mAdvancedSslSocketFactory = new AdvancedSslSocketFactory(mKnownKeyManager, trustMgr, mHostnameVerifier);
         }
         return mAdvancedSslSocketFactory;
     }
@@ -190,10 +165,8 @@ public class NetworkUtils {
         return mKnownServersStore;
     }
     
-    
     public static void addCertToKnownServersStore(Certificate cert, Context context) 
     		throws  KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
-
 
         Log_OC.d(TAG, "AARON: adding server cert to trust store");
         new Throwable().printStackTrace();
@@ -207,7 +180,19 @@ public class NetworkUtils {
             fos.close();
         }
     }
-    
+
+    private static AdvancedX509KeyManager mKnownKeyManager = null;
+
+    public static void addCertByAliasToKeyManagers(String alias, Context context)
+            throws KeyManagementException, NoSuchAlgorithmException, CertificateException {
+
+        Log_OC.d(TAG, "AARON: adding client cert to trust store");
+        new Throwable().printStackTrace();
+        mKnownKeyManager = AdvancedX509KeyManager.fromAlias(context, alias);
+
+        mAdvancedSslSocketFactory.updateKeyManager(mKnownKeyManager);
+
+    }
     
     static public MultiThreadedHttpConnectionManager getMultiThreadedConnManager() {
         if (mConnManager == null) {

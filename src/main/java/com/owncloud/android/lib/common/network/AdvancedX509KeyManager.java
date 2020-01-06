@@ -25,6 +25,7 @@ public class AdvancedX509KeyManager implements X509KeyManager {
     private final X509Certificate[] certChain;
     private final PrivateKey privateKey;
     private static final String TAG = AdvancedX509KeyManager.class.getSimpleName();
+    private static AdvancedX509KeyManager instance = null;
 
     public static SSLContext setForConnection(HttpsURLConnection con, Context context, String alias) throws CertificateException, KeyManagementException {
         SSLContext sslContext = null;
@@ -59,9 +60,17 @@ public class AdvancedX509KeyManager implements X509KeyManager {
     }
 
 	public AdvancedX509KeyManager(String alias, X509Certificate[] certChain, PrivateKey privateKey) throws CertificateException {
-        this.alias = alias;
-        this.certChain = certChain;
-        this.privateKey = privateKey;
+
+            this.alias = alias;
+            this.certChain = certChain;
+            this.privateKey = privateKey;
+    }
+
+    public static AdvancedX509KeyManager getInstance(String alias, X509Certificate[] certChain, PrivateKey privateKey) throws CertificateException {
+        if (instance == null) {
+            instance = new AdvancedX509KeyManager(alias, certChain, privateKey);
+        }
+        return instance;
     }
 
     @Override
