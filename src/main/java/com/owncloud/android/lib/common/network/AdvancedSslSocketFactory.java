@@ -66,7 +66,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
 
     private static final String TAG = AdvancedSslSocketFactory.class.getSimpleName();
 
-    private SSLContext mSslContext = null;
+    private static SSLContext mSslContext = null;
     private AdvancedX509TrustManager mTrustManager = null;
     private AdvancedX509KeyManager mKeyManager = null;
     private X509HostnameVerifier mHostnameVerifier = null;
@@ -87,7 +87,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
                     "AdvancedSslSocketFactory can not be created with a null Trust Manager and a " +
                             "not null Hostname Verifier"
             );
-        mSslContext = sslContext;
+        AdvancedSslSocketFactory.mSslContext = sslContext;
         mTrustManager = trustManager;
         mKeyManager = keyManager;
         mHostnameVerifier = hostnameVerifier;
@@ -113,7 +113,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
     public void updateKeyManager(AdvancedX509KeyManager keyManager) throws NoSuchAlgorithmException, KeyManagementException {
         AdvancedX509KeyManager[] kms = new AdvancedX509KeyManager[] { keyManager };
         AdvancedX509TrustManager[] tms = new AdvancedX509TrustManager[] { mTrustManager };
-        mSslContext = createSslContext(kms, tms);
+        AdvancedSslSocketFactory.mSslContext = createSslContext(kms, tms);
 
     }
 
@@ -128,7 +128,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
     public Socket createSocket(String host, int port, InetAddress clientHost, int clientPort)
             throws IOException {
 
-        Socket socket = mSslContext.getSocketFactory().createSocket(getInetAddressForHost(host), port, clientHost,
+        Socket socket = AdvancedSslSocketFactory.mSslContext.getSocketFactory().createSocket(getInetAddressForHost(host), port, clientHost,
                 clientPort);
         enableSecureProtocols(socket);
         verifyPeerIdentity(host, port, socket);
@@ -203,7 +203,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
 
         //logSslInfo();
 
-        SocketFactory socketfactory = mSslContext.getSocketFactory();
+        SocketFactory socketfactory = AdvancedSslSocketFactory.mSslContext.getSocketFactory();
         Log_OC.d(TAG, " AARON: ... with connection timeout " + timeout + " and socket timeout " + params.getSoTimeout());
         Socket socket = socketfactory.createSocket();
         enableSecureProtocols(socket);
@@ -244,7 +244,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
     @Override
     public Socket createSocket(String host, int port) throws IOException {
         Log_OC.d(TAG, "AARON: Creating SSL Socket with remote " + host + ":" + port);
-        Socket socket = mSslContext.getSocketFactory().createSocket(getInetAddressForHost(host), port);
+        Socket socket = AdvancedSslSocketFactory.mSslContext.getSocketFactory().createSocket(getInetAddressForHost(host), port);
         enableSecureProtocols(socket);
         verifyPeerIdentity(host, port, socket);
         return socket;
@@ -253,7 +253,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
 
     @Override
     public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException {
-        Socket sslSocket = mSslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
+        Socket sslSocket = AdvancedSslSocketFactory.mSslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
         enableSecureProtocols(sslSocket);
         verifyPeerIdentity(host, port, sslSocket);
         return sslSocket;
@@ -400,7 +400,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
      * @param socket
      */
     private void enableSecureProtocols(Socket socket) {
-        SSLParameters params = mSslContext.getSupportedSSLParameters();
+        SSLParameters params = AdvancedSslSocketFactory.mSslContext.getSupportedSSLParameters();
         String[] supportedProtocols = params.getProtocols();
         ((SSLSocket) socket).setEnabledProtocols(supportedProtocols);
     }

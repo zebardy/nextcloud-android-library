@@ -116,7 +116,7 @@ public class NetworkUtils {
              */
 
             mHostnameVerifier = new BrowserCompatHostnameVerifier();
-            mAdvancedSslSocketFactory = new AdvancedSslSocketFactory(mKnownKeyManager, trustMgr, mHostnameVerifier);
+            mAdvancedSslSocketFactory = new AdvancedSslSocketFactory(NetworkUtils.mKnownKeyManager, trustMgr, mHostnameVerifier);
         }
         return mAdvancedSslSocketFactory;
     }
@@ -183,14 +183,18 @@ public class NetworkUtils {
 
     private static AdvancedX509KeyManager mKnownKeyManager = null;
 
+    public static AdvancedX509KeyManager getKnownKeyManager() {
+        return NetworkUtils.mKnownKeyManager;
+    }
+
     public static void addCertByAliasToKeyManagers(String alias, Context context)
             throws KeyManagementException, NoSuchAlgorithmException, CertificateException {
 
         Log_OC.d(TAG, "AARON: adding client cert to trust store");
         new Throwable().printStackTrace();
-        mKnownKeyManager = AdvancedX509KeyManager.fromAlias(context, alias);
+        NetworkUtils.mKnownKeyManager = AdvancedX509KeyManager.fromAlias(context, alias);
 
-        mAdvancedSslSocketFactory.updateKeyManager(mKnownKeyManager);
+        mAdvancedSslSocketFactory.updateKeyManager(NetworkUtils.mKnownKeyManager);
 
     }
     
