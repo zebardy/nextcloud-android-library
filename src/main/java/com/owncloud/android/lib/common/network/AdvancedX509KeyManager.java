@@ -84,10 +84,18 @@ public class AdvancedX509KeyManager implements X509KeyManager {
         return null;
     }
 
+    public X509Certificate[] getCertificateChain() {
+        return certChain;
+    }
+
     @Override
     public PrivateKey getPrivateKey(String alias) {
         if(this.alias.equals(alias)) return privateKey;
         return null;
+    }
+
+    public PrivateKey getPrivateKey() {
+        return privateKey;
     }
 
 
