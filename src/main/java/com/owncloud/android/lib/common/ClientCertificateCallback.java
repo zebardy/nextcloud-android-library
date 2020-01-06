@@ -1,42 +1,39 @@
 package com.owncloud.android.lib.common;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
+import android.content.Context;
 import android.security.KeyChainAliasCallback;
 
+import com.owncloud.android.lib.common.network.NetworkUtils;
 import com.owncloud.android.lib.common.utils.Log_OC;
 
-public class ClientCertificateActivity extends Activity implements KeyChainAliasCallback {
+public class ClientCertificateCallback implements KeyChainAliasCallback {
 
     public static String alias;
-    public static final String RESULT_ALIAS = "ClientCertificateActivity.alias";
     //private static final String TAG = ClientCertificateActivity.class.getSimpleName();
     private static final String TAG = "ClientCertificateActivity: ";
+    private Context context;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log_OC.d(TAG, "AARON: ClientCertificateActivity - onCreate");
-        super.onCreate(savedInstanceState);
+    public ClientCertificateCallback(Context context) {
+        this.context = context;
     }
 
     /**
      * Callback for the certificate request. Does not happen on the UI thread.
      */
     @Override
-    public void alias(String alias) {
+    public void alias(String alias){
         Log_OC.d(TAG, "AARON: ClientCertificateActivity - alias");
         if (alias == null) {
-            setResult(RESULT_CANCELED);
         } else {
 
             Log_OC.d(TAG, "AARON: ClientCertificateActivity - setting alias: " + alias);
             this.alias = alias;
-            Intent data = new Intent();
-            data.putExtra(RESULT_ALIAS, alias);
-            setResult(RESULT_OK, data);
+            try {
+                NetworkUtils.addCertByAliasToKeyManagers(alias, context);
+            } catch (Exception e) {
+                Log_OC.d(TAG, "AARON: exception adding cert from alias: " + alias + " - " + e.toString());
+            }
         }
-        finish();
     }
 
 
