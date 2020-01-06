@@ -40,6 +40,9 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
 import javax.net.SocketFactory;
@@ -65,14 +68,17 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
 
     private SSLContext mSslContext = null;
     private AdvancedX509TrustManager mTrustManager = null;
+    private AdvancedX509KeyManager mKeyManager = null;
     private X509HostnameVerifier mHostnameVerifier = null;
 
     /**
      * Constructor for AdvancedSSLProtocolSocketFactory.
      */
     public AdvancedSslSocketFactory(
-            SSLContext sslContext, AdvancedX509TrustManager trustManager, X509HostnameVerifier hostnameVerifier
-    ) {
+            AdvancedX509KeyManager keyManager, AdvancedX509TrustManager trustManager, X509HostnameVerifier hostnameVerifier
+    ) throws GeneralSecurityException {
+
+        SSLContext sslContext = createSslContext(new AdvancedX509KeyManager[]{keyManager}, new AdvancedX509TrustManager[]{trustManager});
 
         if (sslContext == null)
             throw new IllegalArgumentException("AdvancedSslSocketFactory can not be created with a null SSLContext");
@@ -83,7 +89,32 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
             );
         mSslContext = sslContext;
         mTrustManager = trustManager;
+        mKeyManager = keyManager;
         mHostnameVerifier = hostnameVerifier;
+
+    }
+
+    private SSLContext createSslContext(AdvancedX509KeyManager[] kms, AdvancedX509TrustManager[] tms)
+            throws NoSuchAlgorithmException, KeyManagementException {
+        SSLContext sslContext;
+        try {
+            sslContext = SSLContext.getInstance("TLSv1.2");
+        } catch (NoSuchAlgorithmException e) {
+            Log_OC.w(TAG, "TLSv1.2 is not supported in this device; falling through TLSv1.0");
+            sslContext = SSLContext.getInstance("TLSv1");
+            // should be available in any device; see reference of supported protocols in
+            // http://developer.android.com/reference/javax/net/ssl/SSLSocket.html
+        }
+        Log_OC.d(TAG, "AARON: init SSL context");
+        sslContext.init(kms, tms, null);
+        return sslContext;
+    }
+
+    public void updateKeyManager(AdvancedX509KeyManager keyManager) throws NoSuchAlgorithmException, KeyManagementException {
+        AdvancedX509KeyManager[] kms = new AdvancedX509KeyManager[] { keyManager };
+        AdvancedX509TrustManager[] tms = new AdvancedX509TrustManager[] { mTrustManager };
+        mSslContext = createSslContext(kms, tms);
+
     }
 
     public SSLContext getSslContext() {

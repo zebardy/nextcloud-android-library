@@ -112,11 +112,6 @@ public class OwnCloudClientFactory {
         // TODO avoid calling to getUserData here
         String userId = am.getUserData(account, AccountUtils.Constants.KEY_USER_ID);
 
-        Log_OC.d(TAG, "AARON: Attempt to get client cert for host: " + baseUri.getHost());
-        ClientCertificateActivity clientCertificateActivity = new ClientCertificateActivity();
-        KeyChain.choosePrivateKeyAlias(clientCertificateActivity, clientCertificateActivity,
-                new String[]{"RSA"}, null, baseUri.getHost(), baseUri.getPort(), null);
-
         OwnCloudClient client = createOwnCloudClient(baseUri, appContext, true);
         client.setUserId(userId);
 
@@ -151,17 +146,6 @@ public class OwnCloudClientFactory {
      */
     public static OwnCloudClient createOwnCloudClient(Uri uri, Context context, boolean followRedirects) {
         Log_OC.d(TAG, "AARON: createOwnCloudClient2");
-
-        Log_OC.d(TAG, "AARON: Attempt to get client cert for host: " + uri.getHost());
-        try {
-            ClientCertificateActivity clientCertificateActivity = new ClientCertificateActivity();
-            KeyChain.choosePrivateKeyAlias(clientCertificateActivity, clientCertificateActivity,
-                    new String[]{"RSA"}, null, uri.getHost(), uri.getPort(), null);
-        } catch (Exception e) {
-            Log_OC.d(TAG, "AARON: exception from KeyChain.choosePrivateKeyAlias - " + e.toString());
-            e.printStackTrace();
-            //Log_OC.d(TAG, "AARON: stack trace from KeyChain.choosePrivateKeyAlias - " + ExceptionUtils.getStackTrace(e));
-        }
 
         Log_OC.d(TAG, "AARON: dialog should have popped up");
 
