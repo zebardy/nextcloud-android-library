@@ -68,7 +68,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
 
     private static SSLContext mSslContext = null;
     private AdvancedX509TrustManager mTrustManager = null;
-    private AdvancedX509KeyManager mKeyManager = null;
+    private static AdvancedX509KeyManager mKeyManager = null;
     private X509HostnameVerifier mHostnameVerifier = null;
 
     /**
@@ -78,7 +78,11 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
             AdvancedX509KeyManager keyManager, AdvancedX509TrustManager trustManager, X509HostnameVerifier hostnameVerifier
     ) throws GeneralSecurityException {
 
-        SSLContext sslContext = createSslContext(new AdvancedX509KeyManager[]{keyManager}, new AdvancedX509TrustManager[]{trustManager});
+        if (keyManager != null ) { AdvancedSslSocketFactory.mKeyManager = keyManager; }
+        SSLContext sslContext = createSslContext(
+                new AdvancedX509KeyManager[]{AdvancedSslSocketFactory.mKeyManager},
+                new AdvancedX509TrustManager[]{trustManager}
+                );
 
         if (sslContext == null)
             throw new IllegalArgumentException("AdvancedSslSocketFactory can not be created with a null SSLContext");
@@ -89,7 +93,6 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
             );
         AdvancedSslSocketFactory.mSslContext = sslContext;
         mTrustManager = trustManager;
-        mKeyManager = keyManager;
         mHostnameVerifier = hostnameVerifier;
 
     }
@@ -113,6 +116,7 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
     public void updateKeyManager(AdvancedX509KeyManager keyManager) throws NoSuchAlgorithmException, KeyManagementException {
         AdvancedX509KeyManager[] kms = new AdvancedX509KeyManager[] { keyManager };
         AdvancedX509TrustManager[] tms = new AdvancedX509TrustManager[] { mTrustManager };
+        AdvancedSslSocketFactory.mKeyManager = keyManager;
         AdvancedSslSocketFactory.mSslContext = createSslContext(kms, tms);
 
     }
