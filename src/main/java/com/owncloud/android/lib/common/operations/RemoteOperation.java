@@ -118,6 +118,7 @@ public abstract class RemoteOperation implements Runnable {
      */
     @Deprecated
     public RemoteOperationResult execute(Account account, Context context) {
+        Log_OC.d(this, "RemoteOperationResult called: " + account.name);
         if (account == null) {
             throw new IllegalArgumentException("Trying to execute a remote operation with a NULL Account");
         }
@@ -127,12 +128,15 @@ public abstract class RemoteOperation implements Runnable {
         mAccount = account;
         mContext = context.getApplicationContext();
         try {
+            Log_OC.d(this, "creating owncloud account object");
         	OwnCloudAccount ocAccount = new OwnCloudAccount(mAccount, mContext);
+            Log_OC.d(this, "using own cloud client manager factory to get client");
             mClient = OwnCloudClientManagerFactory.getDefaultSingleton().getClientFor(ocAccount, mContext);
         } catch (Exception e) {
             Log_OC.e(TAG, "Error while trying to access to " + mAccount.name, e);
             return new RemoteOperationResult(e);
         }
+        Log_OC.d(this, "running with client");
         return run(mClient);
     }
 
@@ -173,11 +177,14 @@ public abstract class RemoteOperation implements Runnable {
 	 */
 	@Deprecated
     public RemoteOperationResult execute(OwnCloudClient client) {
+
+        Log_OC.d(this, "RemoteOperationResult called with own cloud client object");
         if (client == null) {
             throw new IllegalArgumentException("Trying to execute a remote operation with a NULL OwnCloudClient");
         }
 		mClient = client;
 
+        Log_OC.d(this, "Running with client");
         return run(client);
     }
 
@@ -191,6 +198,7 @@ public abstract class RemoteOperation implements Runnable {
      * @return			Result of the operation.
      */
     public RemoteOperationResult execute(@NonNull NextcloudClient client) {
+        Log_OC.d(this, "RemoteOperationResult called with next cloud client object");
         clientNew = client;
 
         return run(client);
@@ -217,6 +225,7 @@ public abstract class RemoteOperation implements Runnable {
 	@Deprecated
     public Thread execute(Account account, Context context, OnRemoteOperationListener listener,
                           Handler listenerHandler, Activity callerActivity) {
+        Log_OC.d(this, "2 RemoteOperationResult called with account: " + account.name);
         if (account == null) {
             throw new IllegalArgumentException("Trying to execute a remote operation with a NULL Account");
         }
@@ -253,6 +262,7 @@ public abstract class RemoteOperation implements Runnable {
      */
     public Thread execute(Account account, Context context,
                           OnRemoteOperationListener listener, Handler listenerHandler) {
+        Log_OC.d(this, "3 RemoteOperationResult called with account: " + account.name);
 
         if (account == null) {
             throw new IllegalArgumentException("Trying to execute a remote operation with a NULL Account");
@@ -287,6 +297,8 @@ public abstract class RemoteOperation implements Runnable {
 	 * @return					Thread were the remote operation is executed.
 	 */
     public Thread execute(OwnCloudClient client, OnRemoteOperationListener listener, Handler listenerHandler) {
+
+        Log_OC.d(this, "1 RemoteOperationResult called with own cloud client");
 		if (client == null) {
             throw new IllegalArgumentException("Trying to execute a remote operation with a NULL OwnCloudClient");
 		}
@@ -331,6 +343,8 @@ public abstract class RemoteOperation implements Runnable {
                             		mAccount, mContext, mCallerActivity);
                         } else {
                         /** EOF DEPRECATED */
+
+                            Log_OC.d(this, "generating new ownclound client");
                         	OwnCloudAccount ocAccount = new OwnCloudAccount(mAccount, mContext);
                             mClient = OwnCloudClientManagerFactory.getDefaultSingleton().
                             		getClientFor(ocAccount, mContext);
@@ -401,6 +415,7 @@ public abstract class RemoteOperation implements Runnable {
                 }
             });
         }
+        Log_OC.d(this, "run completed");
     }
 
 
