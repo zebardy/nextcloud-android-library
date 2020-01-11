@@ -91,7 +91,7 @@ public class AdvancedX509TrustManager implements X509TrustManager {
      *      String authType)
      */
     public void checkClientTrusted(X509Certificate[] certificates, String authType) throws CertificateException {
-        //log call
+        Log_OC.w(TAG, "checkClientTrusted called");
         mStandardTrustManager.checkClientTrusted(certificates, authType);
     }
 
@@ -101,7 +101,7 @@ public class AdvancedX509TrustManager implements X509TrustManager {
      *      String authType)
      */
     public void checkServerTrusted(X509Certificate[] certificates, String authType) {
-        //log call
+        Log_OC.w(TAG, "checkServerTrusted called");
         if (!isKnownServer(certificates[0])) {
         	CertificateCombinedException result = new CertificateCombinedException(certificates[0]);
         	try {
@@ -140,7 +140,7 @@ public class AdvancedX509TrustManager implements X509TrustManager {
      * @see javax.net.ssl.X509TrustManager#getAcceptedIssuers()
      */
     public X509Certificate[] getAcceptedIssuers() {
-        //log call
+        Log_OC.w(TAG, "checkClientTrusted called");
         return mStandardTrustManager.getAcceptedIssuers();
     }
 
