@@ -97,6 +97,10 @@ public class AdvancedSslSocketFactory implements SecureProtocolSocketFactory {
 
     }
 
+    public AdvancedX509TrustManager getTrustManager() {
+        return mTrustManager;
+    }
+
     private SSLContext createSslContext(AdvancedX509KeyManager[] kms, AdvancedX509TrustManager[] tms)
             throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sslContext;

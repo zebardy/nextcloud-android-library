@@ -32,6 +32,8 @@ import android.net.Uri
 import com.owncloud.android.lib.common.OwnCloudClient
 import com.owncloud.android.lib.common.OwnCloudClientFactory
 import com.owncloud.android.lib.common.accounts.AccountUtils
+import com.owncloud.android.lib.common.network.AdvancedSslSocketFactory
+import com.owncloud.android.lib.common.network.NetworkUtils
 import com.owncloud.android.lib.common.network.RedirectionPath
 import com.owncloud.android.lib.common.operations.RemoteOperation
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
@@ -42,6 +44,8 @@ import okhttp3.Request
 import org.apache.commons.httpclient.HttpStatus
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.X509TrustManager
+import kotlin.reflect.KClass
 
 class NextcloudClient(var baseUri: Uri, val context: Context) : OkHttpClient() {
     companion object {
@@ -51,6 +55,7 @@ class NextcloudClient(var baseUri: Uri, val context: Context) : OkHttpClient() {
 
     var client: OkHttpClient = Builder()
             .cookieJar(CookieJar.NO_COOKIES)
+            .sslSocketFactory(NetworkUtils.getAdvancedSslSocketFactory(context).sslContext.socketFactory, KClass<X509TrustManager>.cast(NetworkUtils.getAdvancedSslSocketFactory(context).trustManager))
             .callTimeout(OwnCloudClientFactory.DEFAULT_DATA_TIMEOUT_LONG, TimeUnit.MILLISECONDS)
             .build()
 
