@@ -29,6 +29,7 @@ public class AdvancedX509KeyManager implements X509KeyManager {
 
     public static SSLContext setForConnection(HttpsURLConnection con, Context context, String alias) throws CertificateException, KeyManagementException {
         SSLContext sslContext = null;
+        Log_OC.d(TAG, "AARON: setForConnection");
         try {
             sslContext = SSLContext.getInstance("TLS");
         } catch(NoSuchAlgorithmException e){
@@ -85,16 +86,21 @@ public class AdvancedX509KeyManager implements X509KeyManager {
     }
 
     public X509Certificate[] getCertificateChain() {
+
+        Log_OC.d(TAG, "AARON: getCertificateChain");
         return certChain;
     }
 
     @Override
     public PrivateKey getPrivateKey(String alias) {
+        Log_OC.d(TAG, "AARON: getPrivateKey");
         if(this.alias.equals(alias)) return privateKey;
         return null;
     }
 
     public PrivateKey getPrivateKey() {
+
+        Log_OC.d(TAG, "AARON: getPrivateKey");
         return privateKey;
     }
 

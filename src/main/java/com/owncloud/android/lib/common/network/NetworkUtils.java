@@ -116,6 +116,8 @@ public class NetworkUtils {
              */
 
             mHostnameVerifier = new BrowserCompatHostnameVerifier();
+            if(NetworkUtils.mKnownKeyManager == null){
+                Log_OC.d(TAG, "no known key manger"); }
             mAdvancedSslSocketFactory = new AdvancedSslSocketFactory(NetworkUtils.mKnownKeyManager, trustMgr, mHostnameVerifier);
         }
         return mAdvancedSslSocketFactory;

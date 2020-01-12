@@ -38,26 +38,37 @@ import com.owncloud.android.lib.common.network.RedirectionPath
 import com.owncloud.android.lib.common.operations.RemoteOperation
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.common.utils.Log_OC
-import okhttp3.CookieJar
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import okhttp3.*
+import okhttp3.internal.connection.RealConnection
+import okhttp3.internal.connection.StreamAllocation
+import okhttp3.internal.platform.Platform
+import okhttp3.internal.tls.CertificateChainCleaner
 import org.apache.commons.httpclient.HttpStatus
 import java.io.IOException
+import java.util.ArrayList
+import java.util.LinkedHashSet
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
-import kotlin.reflect.KClass
 
-class NextcloudClient(var baseUri: Uri, val context: Context) : OkHttpClient() {
-    companion object {
-        @JvmStatic
-        val TAG = NextcloudClient::class.java.simpleName
-    }
+public class NextcloudClient(var baseUri: Uri, val context: Context) {
+    /*companion object {
+        //@JvmStatic
+        //val TAG = NextcloudClient::class.java.simpleName
 
-    var client: OkHttpClient = Builder()
+    }*/
+
+    var client: OkHttpClient = OkHttpClient.Builder()
             .cookieJar(CookieJar.NO_COOKIES)
-            .sslSocketFactory(NetworkUtils.getAdvancedSslSocketFactory(context).sslContext.socketFactory, KClass<X509TrustManager>.cast(NetworkUtils.getAdvancedSslSocketFactory(context).trustManager))
+            .sslSocketFactory(NetworkUtils.getAdvancedSslSocketFactory(context).sslContext.socketFactory, NetworkUtils.getAdvancedSslSocketFactory(context).trustManager)
             .callTimeout(OwnCloudClientFactory.DEFAULT_DATA_TIMEOUT_LONG, TimeUnit.MILLISECONDS)
             .build()
+
+    val TAG = NextcloudClient::class.java.simpleName
+    /*var sslSocketFactory: SSLSocketFactory = NetworkUtils.getAdvancedSslSocketFactory(context).sslContext.socketFactory;
+    var certificateChainCleaner: CertificateChainCleaner = CertificateChainCleaner.get(NetworkUtils.getAdvancedSslSocketFactory(context).trustManager)
+    var certificatePinner: CertificatePinner = CertificatePinner.Builder().add(baseUri.host,CertificatePinner.pin(NetworkUtils.getAdvancedSslSocketFactory(context).trustManager.acceptedIssuers.get(0))).build();
+    */
 
     lateinit var credentials: String
     lateinit var userId: String
@@ -70,6 +81,11 @@ class NextcloudClient(var baseUri: Uri, val context: Context) : OkHttpClient() {
     
     fun execute(method: OkHttpMethodBase): Int {
         return method.execute(this)
+    }
+
+    fun newCall(request: Request): Call {
+        this.request = request
+        return client.newCall(request)
     }
 
     fun getRequestHeader(name: String): String? {
